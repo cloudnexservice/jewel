@@ -20,7 +20,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search for diamond rings, gold necklaces..."
+          placeholder="Search jewellery - gold earrings, diamond rings..."
           className="w-full h-16 pl-14 pr-32 bg-white border border-gold/20 rounded-full text-lg focus:outline-none focus:ring-2 focus:ring-gold/30 focus:border-gold transition-all luxury-shadow"
         />
         <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gold">
@@ -34,7 +34,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         </button>
       </form>
       <div className="mt-4 flex flex-wrap justify-center gap-3">
-        {['Diamond Ring', 'Gold Necklace', 'Ruby Pendant', 'Emerald Bracelet'].map((tag) => (
+        {['Gold Earrings', 'Diamond Ring', 'Pearl Necklace', 'Emerald Bracelet'].map((tag) => (
           <button
             key={tag}
             onClick={() => {

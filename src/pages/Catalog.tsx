@@ -58,21 +58,21 @@ export const Catalog: React.FC = () => {
       <main className="flex-grow">
         {/* Hero Section with Search */}
         <section className="bg-white border-b border-gold/5">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-16 pb-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-12 pb-8">
             <motion.h1 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-4xl md:text-6xl font-serif mb-4 tracking-tight"
+              className="text-2xl md:text-3xl font-serif mb-3 tracking-tight font-medium"
             >
-              Timeless <span className="italic text-gold">Elegance</span>
+              Fine <span className="italic text-gold">Jewellery</span> Collection
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="text-stone-500 uppercase tracking-[0.3em] text-xs mb-8"
+              className="text-stone-600 uppercase tracking-widest text-xs mb-8 font-medium"
             >
-              Discover our curated collection of fine jewellery
+              Explore our premium collection
             </motion.p>
             <SearchBar onSearch={handleSearch} />
           </div>
@@ -118,11 +118,11 @@ export const Catalog: React.FC = () => {
             <div className="flex-grow">
               <div className="flex justify-between items-center mb-10">
                 <div>
-                  <h2 className="text-2xl font-serif">
+                  <h2 className="text-lg font-serif font-medium text-stone-800">
                     {searchQuery ? `Results for "${searchQuery}"` : `${category} Collection`}
                   </h2>
-                  <p className="text-xs text-stone-400 uppercase tracking-widest mt-1">
-                    {sortedProducts.length} Pieces Found
+                  <p className="text-xs text-stone-500 uppercase tracking-widest mt-2">
+                    {sortedProducts.length} pieces found
                   </p>
                 </div>
                 <SortDropdown value={sortBy} onChange={setSortBy} />
