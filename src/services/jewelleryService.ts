@@ -1,6 +1,6 @@
 import { Product, Category } from '../types';
 
-const ACCESS_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY;
+const ACCESS_KEY = (import.meta as any).env.VITE_UNSPLASH_ACCESS_KEY;
 
 if (!ACCESS_KEY) {
   console.warn(
