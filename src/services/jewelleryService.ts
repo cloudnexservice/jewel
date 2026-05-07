@@ -42,6 +42,21 @@ const CATEGORY_KEYWORDS = {
   'Pendant': ['pendant', 'pendants', 'locket', 'lockets']
 };
 
+const CATEGORY_SEARCH_MAP: Record<string, Category> = {
+  ring: 'Ring',
+  rings: 'Ring',
+  necklace: 'Necklace',
+  necklaces: 'Necklace',
+  bracelet: 'Bracelet',
+  bracelets: 'Bracelet',
+  bangle: 'Bracelet',
+  bangles: 'Bracelet',
+  earring: 'Earrings',
+  earrings: 'Earrings',
+  pendant: 'Pendant',
+  pendants: 'Pendant'
+};
+
 /**
  * Negative keywords to exclude - if these appear, exclude the item
  */
@@ -119,13 +134,12 @@ const generateTitle = (
  */
 const extractCategoryFromSearch = (searchTerm: string): Category | null => {
   const term = searchTerm.toLowerCase();
-  // Check more specific/complete words first to avoid substring matches
-  // For example, check "earring" before "ring" since "earring" contains "ring"
-  if (term.includes('earring')) return 'Earrings';
-  if (term.includes('pendant')) return 'Pendant';
-  if (term.includes('necklace')) return 'Necklace';
-  if (term.includes('bracelet')) return 'Bracelet';
-  if (term.includes('ring')) return 'Ring';
+  for (const [keyword, category] of Object.entries(CATEGORY_SEARCH_MAP)) {
+    const regex = new RegExp(`\\b${keyword}\\b`, 'i');
+    if (regex.test(term)) {
+      return category;
+    }
+  }
   return null;
 };
 

@@ -4,25 +4,75 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Star, Shield, Award } from 'lucide-react';
 import { Navbar } from '../components/Navbar';
 import { Footer } from '../components/Footer';
-import { ProductCard } from '../components/ProductCard';
-import { Product } from '../types';
 import { fetchJewellery } from '../services/jewelleryService';
 
+const categoryConfigs = [
+  {
+    label: 'Rings',
+    slug: 'rings',
+    description: 'Elegant bands and statement solitaires.',
+    searchQuery: 'luxury gold ring jewelry'
+  },
+  {
+    label: 'Bangles',
+    slug: 'bangles',
+    description: 'Graceful wrist adornments with refined detail.',
+    searchQuery: 'luxury bangle bracelet jewelry'
+  },
+  {
+    label: 'Necklaces',
+    slug: 'necklaces',
+    description: 'Timeless neckpieces for every occasion.',
+    searchQuery: 'luxury necklace chain jewelry'
+  },
+  {
+    label: 'Earrings',
+    slug: 'earrings',
+    description: 'Refined studs, hoops, and chandelier designs.',
+    searchQuery: 'luxury earrings studs jewelry'
+  },
+  {
+    label: 'Bracelets',
+    slug: 'bracelets',
+    description: 'Statement pieces that shimmer with every movement.',
+    searchQuery: 'luxury bracelet wrist jewelry'
+  },
+  {
+    label: 'Pendants',
+    slug: 'pendants',
+    description: 'Delicate charms layered with timeless luxury.',
+    searchQuery: 'luxury pendant locket jewelry'
+  }
+];
+
 export const Home: React.FC = () => {
-  const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [heroImage, setHeroImage] = useState('');
+  const [categoryImages, setCategoryImages] = useState<Record<string, string>>({});
+  const [categoryCards, setCategoryCards] = useState(categoryConfigs);
 
   useEffect(() => {
     const loadData = async () => {
-      // Fetch featured products
-      const products = await fetchJewellery('luxury jewelry product', 'All');
-      setFeaturedProducts(products.slice(0, 6));
-      
-      // Fetch a specific hero image
       const heroResults = await fetchJewellery('luxury diamond necklace jewelry product', 'Necklace');
       if (heroResults.length > 0) {
         setHeroImage(heroResults[0].image);
       }
+
+      // Fetch images for each category
+      const images: Record<string, string> = {};
+      for (const config of categoryConfigs) {
+        const results = await fetchJewellery(config.searchQuery, config.label as any);
+        if (results.length > 0) {
+          images[config.slug] = results[0].image;
+        }
+      }
+      setCategoryImages(images);
+
+      // Update category cards with fetched images
+      const updatedCards = categoryConfigs.map(config => ({
+        ...config,
+        image: images[config.slug] || 'https://images.unsplash.com/photo-1515562141207-7a18b5ce7142?auto=format&fit=crop&q=80'
+      }));
+      setCategoryCards(updatedCards);
     };
     loadData();
   }, []);
@@ -100,25 +150,51 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Featured Collection */}
-      <section className="py-24 bg-luxury-paper">
+      {/* Shop By Category */}
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <span className="text-gold text-[10px] uppercase tracking-[0.3em] font-bold mb-4 block">Curated Selection</span>
-            <h2 className="text-4xl md:text-5xl font-serif mb-4">Featured Treasures</h2>
-            <div className="w-24 h-1 bg-gold/20 mx-auto" />
+            <span className="text-gold text-[10px] uppercase tracking-[0.3em] font-bold mb-4 block">Explore By Category</span>
+            <h2 className="text-4xl md:text-5xl font-serif mb-4">Shop By Category</h2>
+            <p className="max-w-2xl mx-auto text-stone-500 leading-relaxed">
+              Discover our signature pieces through refined categories designed to guide you to the perfect luxury jewellery moment.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+            {categoryCards.map((card) => (
+              <Link
+                key={card.slug}
+                to={`/category/${card.slug}`}
+                className="group relative overflow-hidden rounded-[2rem] border border-gold/10 bg-stone-950 text-white shadow-[0_20px_60px_rgba(15,12,8,0.18)] transition-transform duration-500 hover:-translate-y-2 h-96"
+              >
+                <img
+                  src={card.image}
+                  alt={card.label}
+                  loading="lazy"
+                  decoding="async"
+                  onError={(e) => {
+                    const img = e.currentTarget;
+                    img.onerror = null;
+                    img.style.backgroundColor = '#3a3126';
+                  }}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/20 to-black/90" />
+                <div className="absolute bottom-0 left-0 right-0 p-8">
+                  <span className="inline-block px-3 py-1 mb-4 text-[10px] uppercase tracking-[0.3em] font-semibold text-gold bg-white/10 rounded-full border border-white/10">
+                    {card.label}
+                  </span>
+                  <h3 className="text-3xl font-serif mb-3">{card.label}</h3>
+                  <p className="text-sm text-stone-300 leading-relaxed mb-6">
+                    {card.description}
+                  </p>
+                  <span className="inline-flex items-center text-xs uppercase tracking-[0.3em] text-gold font-bold">
+                    Explore {card.label}
+                  </span>
+                </div>
+              </Link>
             ))}
-          </div>
-
-          <div className="text-center mt-16">
-            <Link to="/catalog" className="inline-flex items-center gap-2 text-gold font-bold uppercase tracking-widest text-xs hover:underline underline-offset-8 transition-all">
-              View Full Catalog <ArrowRight size={14} />
-            </Link>
           </div>
         </div>
       </section>
